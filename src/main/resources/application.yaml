@@ -1,0 +1,5 @@
+spring:
+    banner: classpath:banner.txt
+
+application-property:
+    questionnaire-file: questions_and_answers.csv
