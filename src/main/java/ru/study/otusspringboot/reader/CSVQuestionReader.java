@@ -1,7 +1,9 @@
 package ru.study.otusspringboot.reader;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -11,6 +13,7 @@ import ru.study.otusspringboot.entity.Question;
 import java.io.FileReader;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
 
 @Component
@@ -24,19 +27,33 @@ public class CSVQuestionReader implements QuestionReader {
     }
 
 
+    @Override
     public List<Question> readQuestions() {
 
         try (FileReader fileReader = new FileReader(
                 ResourceUtils.getFile(CLASSPATH_URL_PREFIX + property.getQuestionnaireFile())
         )) {
 
-            CsvToBean<Question> csvToBean = new CsvToBeanBuilder<Question>(fileReader)
+            CSVParser parser = new CSVParserBuilder()
                     .withSeparator('@')
-                    .withType(Question.class)
-                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreQuotations(true)
                     .build();
 
-            return csvToBean.parse();
+            CSVReader csvReader = new CSVReaderBuilder(fileReader)
+                    .withSkipLines(1)
+                    .withCSVParser(parser)
+                    .build();
+
+            List<Question> questions = csvReader.readAll()
+                    .stream()
+                    .map(cortege -> Question.builder()
+                            .text(cortege[0])
+                            .correctAnswer(cortege[1])
+                            .build())
+                    .collect(toList());
+            csvReader.close();
+
+            return questions;
 
         } catch (Exception e) {
             log.error("Cannot read questions from resources", e);

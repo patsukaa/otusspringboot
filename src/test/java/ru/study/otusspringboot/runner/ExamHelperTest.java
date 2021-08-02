@@ -7,7 +7,6 @@ import ru.study.otusspringboot.entity.Answer;
 import ru.study.otusspringboot.entity.Question;
 import ru.study.otusspringboot.entity.exam.Exam;
 import ru.study.otusspringboot.entity.exam.ExamResult;
-import ru.study.otusspringboot.runner.ExamHelper;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -19,7 +18,7 @@ class ExamHelperTest {
     private ExamHelper helper = new ExamHelper();
 
     @ParameterizedTest(name = "exam {0} should be equals to {1}")
-    @MethodSource("provideTestData")
+    @MethodSource("provideTestDataForCheckExam")
     void shouldReturnRightExamResult(Exam exam, ExamResult expectedResult) {
         assertThat(helper.checkExam(exam))
                 .isNotNull()
@@ -28,7 +27,7 @@ class ExamHelperTest {
 
     }
 
-    static Stream<Arguments> provideTestData() {
+    static Stream<Arguments> provideTestDataForCheckExam() {
         return Stream.of(
                 Arguments.of(
                         Exam.builder().build(),
@@ -63,6 +62,4 @@ class ExamHelperTest {
 
         );
     }
-
-
 }

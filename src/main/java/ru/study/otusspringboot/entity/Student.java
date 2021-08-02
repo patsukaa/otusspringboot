@@ -7,8 +7,8 @@ import lombok.Getter;
 public class Student {
 
     @Getter
-    private String firstName;
+    private final String firstName;
 
     @Getter
-    private String name;
+    private final String name;
 }
