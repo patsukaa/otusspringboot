@@ -9,11 +9,17 @@ import ru.study.otusspringboot.entity.exam.ExamResult;
 import ru.study.otusspringboot.runner.ExamRunner;
 import ru.study.otusspringboot.runner.ExamRunnerImp;
 
+import java.util.Locale;
+
 @SpringBootApplication
 @EnableConfigurationProperties(value = {
         ApplicationProperty.class
 })
 public class OtusSpringBootApplication {
+
+    static {
+        Locale.setDefault(new Locale("ru"));
+    }
 
 
     public static void main(String[] args) {
